@@ -70,8 +70,11 @@ export class ScriptImporter {
 
     public downloadDebuggerWorker(sourcesStoragePath: string, projectRootPath: string): Q.Promise<void> {
         const errPackagerNotRunning = new RangeError(`Cannot attach to packager. Are you sure there is a packager and it is running in the port ${this.packagerPort}? If your packager is configured to run in another port make sure to add that to the setting.json.`);
+        // BEGIN MODIFIED BY PELMERS
+        const fs = new FileSystem();
 
         return ensurePackagerRunning(this.packagerAddress, this.packagerPort, errPackagerNotRunning)
+            .then(() => fs.ensureDirectory(sourcesStoragePath))
             .then(() => {
                 return ReactNativeProjectHelper.getReactNativeVersion(projectRootPath);
             })
@@ -87,7 +90,8 @@ export class ScriptImporter {
 
                 return Request.request(debuggerWorkerURL, true)
                     .then((body: string) => {
-                        return new FileSystem().writeFile(debuggerWorkerLocalPath, body);
+                        return fs.writeFile(debuggerWorkerLocalPath, body);
+                        // END MODIFIED BY PELMERS
                     });
             });
     }

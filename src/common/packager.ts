@@ -40,7 +40,9 @@ export class Packager {
     private static REACT_NATIVE_PACKAGE_NAME = "react-native";
     private static OPN_PACKAGE_MAIN_FILENAME = "index.js";
 
-    constructor(private workspacePath: string, private projectPath: string, private packagerPort?: number, packagerStatusIndicator?: PackagerStatusIndicator) {
+    // BEGIN MODFIFIED BY PELMERS
+    constructor(private workspacePath: string, private projectPath: string, public packagerPort: number, packagerStatusIndicator?: PackagerStatusIndicator) {
+        // END MODIFIED BY PELMERS
         this.packagerRunningAs = PackagerRunAs.NOT_RUNNING;
         this.packagerStatusIndicator = packagerStatusIndicator || new PackagerStatusIndicator();
     }

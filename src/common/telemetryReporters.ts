@@ -1,25 +1,23 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 
-import {RemoteExtension} from "../common/remoteExtension";
 import {Telemetry} from "./telemetry";
 
 export class ExtensionTelemetryReporter implements Telemetry.ITelemetryReporter {
-    private remoteExtension: RemoteExtension;
     private extensionId: string;
     private extensionVersion: string;
     private appInsightsKey: string;
-
     constructor(extensionId: string, extensionVersion: string, key: string, projectRootPath: string) {
         this.extensionId = extensionId;
         this.extensionVersion = extensionVersion;
         this.appInsightsKey = key;
-        this.remoteExtension = RemoteExtension.atProjectRootPath(projectRootPath);
+        // BEGIN MODIFIED BY PELMERS
+        // END MODIFIED BY PELMERS
     }
 
     public sendTelemetryEvent(eventName: string, properties?: Telemetry.ITelemetryEventProperties, measures?: Telemetry.ITelemetryEventMeasures): void {
-        this.remoteExtension.sendTelemetry(this.extensionId, this.extensionVersion, this.appInsightsKey, eventName, properties, measures)
-            .catch(function() { });
+        // BEGIN MODIFIED BY PELMERS
+        // END MODIFIED BY PELMERS
     }
 }
 

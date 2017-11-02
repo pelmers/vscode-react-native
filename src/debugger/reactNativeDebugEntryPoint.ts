@@ -33,12 +33,17 @@ function codeToRun() {
      */
     let nodeDebugFolder: string;
     let Node2DebugAdapter: typeof ChromeDebugAdapter;
+    // BEGIN MODIFIED BY PELMERS
+    process.env.NODE_ENV = 'development';
+    // END MODIFIED BY PELMERS
 
     // nodeDebugLocation.json is dynamically generated on extension activation.
     // If it fails, we must not have been in a react native project
     try {
         /* tslint:disable:no-var-requires */
-        nodeDebugFolder = require("./nodeDebugLocation.json").nodeDebugPath;
+        // BEGIN MODIFIED BY PELMERS
+        nodeDebugFolder = path.join(__dirname, "..", "..", "..","vscode-node-debug2");
+        // END MODIFIED BY PELMERS
         Node2DebugAdapter = require(path.join(nodeDebugFolder, "out/src/nodeDebugAdapter")).NodeDebugAdapter;
         /* tslint:enable:no-var-requires */
 
@@ -82,4 +87,3 @@ entryPointHandler.runApp(
     telemetryReporter,
     codeToRun
 );
-

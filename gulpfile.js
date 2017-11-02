@@ -27,7 +27,6 @@ var testPath = "test";
 
 var sources = [
     srcPath,
-    testPath,
 ].map(function (tsFolder) { return tsFolder + "/**/*.ts"; });
 
 var knownOptions = {
@@ -73,12 +72,11 @@ gulp.task("watch", ["build"], function (cb) {
 });
 
 gulp.task("default", function (callback) {
-    runSequence("clean", "build", "tslint", callback);
+    runSequence("clean", "build", callback);
 });
 
 var lintSources = [
     srcPath,
-    testPath
 ].map(function (tsFolder) { return tsFolder + "/**/*.ts"; });
 lintSources = lintSources.concat([
     "!src/typings/**",

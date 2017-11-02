@@ -29,7 +29,9 @@ export class GeneralMobilePlatform {
     constructor(protected runOptions: IRunOptions, platformDeps: MobilePlatformDeps = {}) {
         this.platformName = this.runOptions.platform;
         this.projectPath = this.runOptions.projectRoot;
-        this.packager = platformDeps.packager || new Packager(this.runOptions.workspaceRoot, this.projectPath, SettingsHelper.getPackagerPort(this.runOptions.workspaceRoot), new PackagerStatusIndicator());
+        // BEGIN MODIFIED BY PELMERS
+        this.packager = platformDeps.packager || new Packager("", this.projectPath, SettingsHelper.getPackagerPort(this.projectPath));
+        // END MODIFIED BY PELMERS
         this.logger = OutputChannelLogger.getChannel(`React Native: Run ${this.platformName}`, true);
         this.logger.clear();
     }

@@ -7,7 +7,8 @@ import {IRunOptions} from "../launchArgs";
 import {GeneralMobilePlatform, MobilePlatformDeps} from "../generalMobilePlatform";
 import {ExponentHelper} from "./exponentHelper";
 
-import * as vscode from "vscode";
+// BEGIN MODIFIED BY PELMERS
+// END MODIFIED BY PELMERS
 import * as Q from "q";
 import {PackagerRunAs} from "../../common/packager";
 import {PackagerStatus} from "../packagerStatusIndicator";
@@ -51,18 +52,14 @@ export class ExponentPlatform extends GeneralMobilePlatform {
                 this.exponentHelper.loginToExponent(
                     (message, password) => {
                         return Q.Promise((resolve, reject) => {
-                            vscode.window.showInputBox({ placeHolder: message, password: password })
-                                .then(login => {
-                                    resolve(login || "");
-                                }, reject);
+                            // BEGIN MODIFIED BY PELMERS
+                            // END MODIFIED BY PELMERS
                         });
                     },
                     (message) => {
                         return Q.Promise((resolve, reject) => {
-                            vscode.window.showInformationMessage(message)
-                                .then(password => {
-                                    resolve(password || "");
-                                }, reject);
+                            // BEGIN MODIFIED BY PELMERS
+                            // END MODIFIED BY PELMERS
                         });
                     }
                 ))
@@ -70,8 +67,9 @@ export class ExponentPlatform extends GeneralMobilePlatform {
                 return this.packager.startAsExponent();
             })
             .then(exponentUrl => {
-                vscode.commands.executeCommand("vscode.previewHtml", vscode.Uri.parse(exponentUrl), 1, "Expo QR code");
+                // BEGIN MODIFIED BY PELMERS
                 this.packager.statusIndicator.updatePackagerStatus(PackagerStatus.EXPONENT_PACKAGER_STARTED);
+                // END MODIFIED BY PELMERS
                 return exponentUrl;
             })
             .then(exponentUrl => {
