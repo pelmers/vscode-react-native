@@ -1,10 +1,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 
-import {MessagingHelper} from "./extensionMessaging";
-import * as WebSocket from "ws";
-import * as rpc from "noice-json-rpc";
 import {Telemetry} from "./telemetry";
+import {MobilePlatformDeps} from "../extension/generalMobilePlatform";
+import {PlatformResolver} from "../extension/platformResolver";
+import {TargetPlatformHelper} from "./targetPlatformHelper";
+import {SettingsHelper} from "../extension/settingsHelper";
+import {Packager} from "./packager";
+import Q = require("q");
 
 export interface ICommonApi {
     expose(methods: any): void;
@@ -34,52 +37,114 @@ export interface IRemoteExtension {
 
 export class RemoteExtension {
     public static atProjectRootPath(projectRootPath: string) {
-        const pipePath = MessagingHelper.getPath(projectRootPath);
-        let ws = new WebSocket("ws+unix://" + pipePath);
-        ws.on("error", (err) => {
-            console.error(err);
-        });
-        const _api: IRemoteExtension = new rpc.Client(ws).api();
-
-        return new RemoteExtension(_api);
+        const packager = new Packager(projectRootPath, projectRootPath, SettingsHelper.getPackagerPort());
+        return new RemoteExtension(projectRootPath, packager);
     }
 
-    constructor(private _api: IRemoteExtension) {}
-
-    public get api(): IRemoteExtension {
-        return this._api;
-    }
-
-    public stopMonitoringLogcat(): Q.Promise<void> {
-        return this._api.Extension.stopMonitoringLogcat();
-    }
-
-    public sendTelemetry(extensionId: string, extensionVersion: string, appInsightsKey: string, eventName: string,
-                         properties?: Telemetry.ITelemetryEventProperties, measures?: Telemetry.ITelemetryEventMeasures): Q.Promise<any> {
-        return this._api.Extension.sendTelemetry(extensionId, extensionVersion, appInsightsKey, eventName, properties, measures);
-    }
-
-    public openFileAtLocation(filename: string, lineNumber: number): Q.Promise<void> {
-        return this._api.Extension.openFileAtLocation(filename, lineNumber);
-    }
+    constructor(private projectRootPath: string, private reactNativePackager: Packager) {}
 
     public getPackagerPort(): Q.Promise<number> {
-        return this._api.Extension.getPackagerPort();
-    }
-
-    public showInformationMessage(infoMessage: string): Q.Promise<void> {
-        return this._api.Extension.showInformationMessage(infoMessage);
-    }
-
-    public launch(request: any): Q.Promise<any> {
-        return this._api.Extension.launch(request);
+        return Q(SettingsHelper.getPackagerPort());
     }
 
     public showDevMenu(deviceId?: string): Q.Promise<any> {
-        return this._api.Extension.showDevMenu(deviceId);
+        return Q(null);
     }
 
     public reloadApp(deviceId?: string): Q.Promise<any> {
-        return this._api.Extension.reloadApp(deviceId);
+        return Q(null);
     }
-}
+
+    public stopMonitoringLogcat(): Q.Promise<any> {
+        return Q(null);
+    }
+
+    public openFileAtLocation(args: any): Q.Promise<any> {
+        return Q(null);
+    }
+
+    public sendTelemetry(args: any): Q.Promise<any> {
+        return Q(null);
+    }
+
+    public showInformationMessage(args: any): Q.Promise<any> {
+        return Q(null);
+    }
+
+    public launch(request: any): Q.Promise<any> {
+        let mobilePlatformOptions = this.requestSetup(request.arguments);
+
+        // We add the parameter if it's defined (adapter crashes otherwise)
+        if (!isNullOrUndefined(request.arguments.logCatArguments)) {
+            mobilePlatformOptions.logCatArguments = [parseLogCatArguments(request.arguments.logCatArguments)];
+    }
+
+        if (!isNullOrUndefined(request.arguments.variant)) {
+            mobilePlatformOptions.variant = request.arguments.variant;
+    }
+
+        if (!isNullOrUndefined(request.arguments.scheme)) {
+            mobilePlatformOptions.scheme = request.arguments.scheme;
+    }
+
+        mobilePlatformOptions.packagerPort = SettingsHelper.getPackagerPort();
+        const platformDeps: MobilePlatformDeps = {
+            packager: this.reactNativePackager,
+        };
+        const mobilePlatform = new PlatformResolver()
+            .resolveMobilePlatform(request.arguments.platform, mobilePlatformOptions, platformDeps);
+        return Q(new Promise((resolve, reject) => {
+                TargetPlatformHelper.checkTargetPlatformSupport(mobilePlatformOptions.platform);
+                return mobilePlatform.startPackager()
+                    .then(() => {
+                        // We've seen that if we don't prewarm the bundle cache, the app fails on the first attempt to connect to the debugger logic
+                        // and the user needs to Reload JS manually. We prewarm it to prevent that issue
+                        console.error("Prewarming bundle cache. This may take a while ...");
+                        return mobilePlatform.prewarmBundleCache();
+                    })
+                    .then(() => {
+                        console.error("Building and running application.");
+                        return mobilePlatform.runApp();
+                    })
+                    .then(() => {
+                        return mobilePlatform.enableJSDebuggingMode();
+                    })
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        reject(error);
+                    });
+            }));
+    }
+
+    private requestSetup(args: any): any {
+        const projectRootPath = this.projectRootPath;
+        let mobilePlatformOptions: any = {
+            projectRoot: projectRootPath,
+            platform: args.platform,
+            target: args.target || "simulator",
+        };
+
+        if (!args.runArguments) {
+            let runArgs = SettingsHelper.getRunArgs(args.platform, args.target || "simulator");
+            mobilePlatformOptions.runArguments = runArgs;
+    }
+
+        return mobilePlatformOptions;
+    }
+    }
+
+function isNullOrUndefined(value: any): boolean {
+    return typeof value === "undefined" || value === null;
+    }
+
+/**
+ * Parses log cat arguments to a string
+ */
+function parseLogCatArguments(userProvidedLogCatArguments: any): string {
+    return Array.isArray(userProvidedLogCatArguments)
+        ? userProvidedLogCatArguments.join(" ") // If it's an array, we join the arguments
+        : userProvidedLogCatArguments; // If not, we leave it as-is
+    }

@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 
-import * as vscode from "vscode";
 import * as Q from "q";
 
 import {IRunOptions} from "./launchArgs";
@@ -30,7 +29,7 @@ export class GeneralMobilePlatform {
     constructor(protected runOptions: IRunOptions, platformDeps: MobilePlatformDeps = {}) {
         this.platformName = this.runOptions.platform;
         this.projectPath = this.runOptions.projectRoot;
-        this.packager = platformDeps.packager || new Packager(vscode.workspace.rootPath, this.projectPath, SettingsHelper.getPackagerPort());
+        this.packager = platformDeps.packager || new Packager("", this.projectPath, SettingsHelper.getPackagerPort());
         this.packageStatusIndicator = platformDeps.packageStatusIndicator || new PackagerStatusIndicator();
         this.logger = OutputChannelLogger.getChannel(`React Native: Run ${this.platformName}`, true);
         this.logger.clear();

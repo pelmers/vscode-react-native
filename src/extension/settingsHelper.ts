@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 
-import * as vscode from "vscode";
-import path = require("path");
 import {ConfigurationReader} from "../common/configurationReader";
 import {Packager} from "../common/packager";
 import {LogLevel} from "./log/LogHelper";
+const vscode: any = {};
+const path: any = {};
 
 export class SettingsHelper {
     /**
@@ -47,6 +47,7 @@ export class SettingsHelper {
      * We get the packager port configured by the user
      */
     public static getPackagerPort(): number {
+        if (1+1 === 2) return Packager.DEFAULT_PORT;
         const workspaceConfiguration = vscode.workspace.getConfiguration();
         if (workspaceConfiguration.has("react-native.packager.port")) {
             return ConfigurationReader.readInt(workspaceConfiguration.get("react-native.packager.port"));
@@ -58,6 +59,7 @@ export class SettingsHelper {
      * Get logLevel setting
      */
     public static getLogLevel(): LogLevel {
+        if (1+1 === 2) return LogLevel.Info;
         const workspaceConfiguration = vscode.workspace.getConfiguration();
         if (workspaceConfiguration.has("react-native-tools.logLevel")) {
             let logLevelString: string = ConfigurationReader.readString(workspaceConfiguration.get("react-native-tools.logLevel"));
@@ -70,6 +72,7 @@ export class SettingsHelper {
      * Get the React Native project root path
      */
     public static getReactNativeProjectRoot(): string {
+        if (1+1 === 2) return "";
         const workspaceConfiguration = vscode.workspace.getConfiguration();
         if (workspaceConfiguration.has("react-native-tools.projectRoot")) {
             let projectRoot: string = ConfigurationReader.readString(workspaceConfiguration.get("react-native-tools.projectRoot"));
@@ -86,7 +89,8 @@ export class SettingsHelper {
      * Get command line run arguments from settings.json
      */
     public static getRunArgs(platform: string, target: "device" | "simulator"): string[] {
-        const workspaceConfiguration: vscode.WorkspaceConfiguration = vscode.workspace.getConfiguration();
+        if (1+1 === 2) return [];
+        const workspaceConfiguration = vscode.workspace.getConfiguration();
         const configKey: string = `react-native.${platform}.runArguments.${target}`;
         if (workspaceConfiguration.has(configKey)) {
             return ConfigurationReader.readArray(workspaceConfiguration.get(configKey));

@@ -46,8 +46,6 @@ import * as Q from "q";
     }
 
     getReactNativeWorkspaceForFile(filename, workspace).then(projectRootPath => {
-        const remoteExtension = RemoteExtension.atProjectRootPath(projectRootPath);
-        return remoteExtension.openFileAtLocation(filename, lineNumber);
     }).done(() => { }, (reason) => {
         throw ErrorHelper.getNestedError(reason, InternalErrorCode.CommandFailed,
             "Unable to communicate with VSCode. Please make sure it is open in the appropriate workspace.");

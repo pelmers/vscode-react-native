@@ -5,14 +5,33 @@
  * Formatter for the Output channel.
  */
 
-import * as vscode from "vscode";
+import {OutputChannel} from "vscode";
 import { ILogger, LogLevel, LogHelper } from "./LogHelper";
+import { logger } from "vscode-chrome-debug-core";
 
 const channels: { [channelName: string]: OutputChannelLogger } = {};
 
+const ConsoleChannel: OutputChannel = {
+    name: "console",
+    append(value: string): void {
+        logger.log(value.trim());
+    },
+    appendLine(value: string): void {
+        logger.log(value.trim());
+    },
+    clear(): void {
+    },
+    show(_column?: any, _preserveFocus?: boolean): void {
+    },
+    hide(): void {
+    },
+    dispose(): void {
+    },
+};
+
 export class OutputChannelLogger implements ILogger {
     public static MAIN_CHANNEL_NAME: string = "React Native";
-    private outputChannel: vscode.OutputChannel;
+    private outputChannel: OutputChannel;
 
     public static disposeChannel(channelName: string): void {
         if (channels[channelName]) {
@@ -35,7 +54,7 @@ export class OutputChannelLogger implements ILogger {
 
     constructor(public readonly channelName: string, lazy: boolean = false, private preserveFocus: boolean = false) {
         if (!lazy) {
-            this.channel = vscode.window.createOutputChannel(this.channelName);
+            this.channel = ConsoleChannel;
             this.channel.show(this.preserveFocus);
         }
     }
@@ -84,7 +103,7 @@ export class OutputChannelLogger implements ILogger {
         return `[${LogLevel[level]}] ${message}\n`;
     }
 
-    public getOutputChannel(): vscode.OutputChannel {
+    public getOutputChannel(): OutputChannel {
         return this.channel;
     }
 
@@ -92,17 +111,17 @@ export class OutputChannelLogger implements ILogger {
         this.channel.clear();
     }
 
-    private get channel(): vscode.OutputChannel {
+    private get channel(): OutputChannel {
         if (this.outputChannel) {
             return this.outputChannel;
         } else {
-            this.outputChannel = vscode.window.createOutputChannel(this.channelName);
+            this.outputChannel = ConsoleChannel;
             this.outputChannel.show(this.preserveFocus);
             return this.outputChannel;
         }
     }
 
-    private set channel(channel: vscode.OutputChannel) {
+    private set channel(channel: OutputChannel) {
         this.outputChannel = channel;
     }
 }

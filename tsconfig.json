@@ -17,7 +17,7 @@
         "noImplicitThis": true,
         "noImplicitReturns": true,
         "noEmitOnError": true,
-        "noUnusedLocals": true,
+        "noUnusedLocals": false,
         "noFallthroughCasesInSwitch": true,
         "forceConsistentCasingInFileNames": true
     },
@@ -29,6 +29,6 @@
         "SampleApplication/.vscode",
         "ReactTypings",
         "tools/",
-        "test/resources/sampleReactNative022Project/"
+        "test/"
     ]
 }
