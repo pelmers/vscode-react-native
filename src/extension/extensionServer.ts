@@ -170,6 +170,7 @@ export class ExtensionServer implements vscode.Disposable {
         if (!isNullOrUndefined(request.arguments.logCatArguments)) {
             mobilePlatformOptions.logCatArguments = [parseLogCatArguments(request.arguments.logCatArguments)];
         }
+        // TODO(pelmers): I did not make changes here! But if it changes mirror to remoteExtension.launch!
 
         if (!isNullOrUndefined(request.arguments.variant)) {
             mobilePlatformOptions.variant = request.arguments.variant;

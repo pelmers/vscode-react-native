@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 
+// BEGIN MODIFIED BY PELMERS
+// END MODIFIED BY PELMERS
 import * as Q from "q";
 
 import {IRunOptions} from "./launchArgs";
@@ -29,7 +31,9 @@ export class GeneralMobilePlatform {
     constructor(protected runOptions: IRunOptions, platformDeps: MobilePlatformDeps = {}) {
         this.platformName = this.runOptions.platform;
         this.projectPath = this.runOptions.projectRoot;
+        // BEGIN MODIFIED BY PELMERS
         this.packager = platformDeps.packager || new Packager("", this.projectPath, SettingsHelper.getPackagerPort());
+        // END MODIFIED BY PELMERS
         this.packageStatusIndicator = platformDeps.packageStatusIndicator || new PackagerStatusIndicator();
         this.logger = OutputChannelLogger.getChannel(`React Native: Run ${this.platformName}`, true);
         this.logger.clear();

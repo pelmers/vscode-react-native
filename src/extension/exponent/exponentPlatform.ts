@@ -7,16 +7,22 @@ import {IRunOptions} from "../launchArgs";
 import {GeneralMobilePlatform, MobilePlatformDeps} from "../generalMobilePlatform";
 import {ExponentHelper} from "./exponentHelper";
 
+// BEGIN MODIFIED BY PELMERS
+// END MODIFIED BY PELMERS
 import * as Q from "q";
 import {PackagerRunAs} from "../../common/packager";
 import {PackagerStatus} from "../packagerStatusIndicator";
 import {SettingsHelper} from "../settingsHelper";
 
 const projectRootPath = SettingsHelper.getReactNativeProjectRoot();
+// BEGIN MODIFIED BY PELMERS
+// END MODIFIED BY PELMERS
 
 export class ExponentPlatform extends GeneralMobilePlatform {
     private exponentTunnelPath: string | null;
+    // BEGIN MODIFIED BY PELMERS
     private exponentHelper = new ExponentHelper(projectRootPath, projectRootPath);
+    // END MODIFIED BY PELMERS
 
     constructor(runOptions: IRunOptions, platformDeps: MobilePlatformDeps = {}) {
         super(runOptions, platformDeps);
@@ -52,10 +58,14 @@ export class ExponentPlatform extends GeneralMobilePlatform {
                 this.exponentHelper.loginToExponent(
                     (message, password) => {
                         return Q.Promise((resolve, reject) => {
+                            // BEGIN MODIFIED BY PELMERS
+                            // END MODIFIED BY PELMERS
                         });
                     },
                     (message) => {
                         return Q.Promise((resolve, reject) => {
+                            // BEGIN MODIFIED BY PELMERS
+                            // END MODIFIED BY PELMERS
                         });
                     }
                 ))
@@ -63,6 +73,8 @@ export class ExponentPlatform extends GeneralMobilePlatform {
                 return this.packager.startAsExponent();
             })
             .then(exponentUrl => {
+                // BEGIN MODIFIED BY PELMERS
+                // END MODIFIED BY PELMERS
                 this.packageStatusIndicator.updatePackagerStatus(PackagerStatus.EXPONENT_PACKAGER_STARTED);
                 return exponentUrl;
             })

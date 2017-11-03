@@ -7,6 +7,7 @@ import {PlatformResolver} from "../extension/platformResolver";
 import {TargetPlatformHelper} from "./targetPlatformHelper";
 import {SettingsHelper} from "../extension/settingsHelper";
 import {Packager} from "./packager";
+// BEGIN MODIFIED BY PELMERS
 import Q = require("q");
 
 export interface ICommonApi {
@@ -71,6 +72,7 @@ export class RemoteExtension {
         return Q(null);
     }
 
+    // TODO(pelmers): mostly copied from extensionServer.launch
     public launch(request: any): Q.Promise<any> {
         let mobilePlatformOptions = this.requestSetup(request.arguments);
 
@@ -148,3 +150,4 @@ function parseLogCatArguments(userProvidedLogCatArguments: any): string {
         ? userProvidedLogCatArguments.join(" ") // If it's an array, we join the arguments
         : userProvidedLogCatArguments; // If not, we leave it as-is
     }
+// END MODIFIED BY PELMERS

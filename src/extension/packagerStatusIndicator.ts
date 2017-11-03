@@ -1,7 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 
+// BEGIN MODIFIED BY PELMERS
 import {Disposable} from "vscode";
+// END MODIFIED BY PELMERS
 
 /**
  * Updates the Status bar with the status of React Native Packager.
@@ -20,7 +22,9 @@ export class PackagerStatusIndicator implements Disposable {
     private static PACKAGER_STOPPED_STATUS_STR: string = "React Native Packager: Stopped";
 
     public constructor() {
+        // BEGIN MODIFIED BY PELMERS
         this.packagerStatusItem = {show: function() {}, dispose: function() {}};
+        // END MODIFIED BY PELMERS
     }
 
     public dispose(): void {

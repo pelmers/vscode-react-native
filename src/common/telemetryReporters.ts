@@ -11,9 +11,13 @@ export class ExtensionTelemetryReporter implements Telemetry.ITelemetryReporter 
         this.extensionId = extensionId;
         this.extensionVersion = extensionVersion;
         this.appInsightsKey = key;
+        // BEGIN MODIFIED BY PELMERS
+        // END MODIFIED BY PELMERS
     }
 
     public sendTelemetryEvent(eventName: string, properties?: Telemetry.ITelemetryEventProperties, measures?: Telemetry.ITelemetryEventMeasures): void {
+        // BEGIN MODIFIED BY PELMERS
+        // END MODIFIED BY PELMERS
     }
 }
 

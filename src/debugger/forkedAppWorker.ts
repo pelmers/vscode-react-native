@@ -42,6 +42,8 @@ export class ForkedAppWorker implements IDebuggeeWorker {
         private packagerLocalRoot?: string
     ) {
         this.scriptImporter = new ScriptImporter(this.packagerAddress, this.packagerPort, this.sourcesStoragePath, this.packagerRemoteRoot, this.packagerLocalRoot);
+        // BEGIN MODIFIED BY PELMERS
+        // END MODIFIED BY PELMERS
 
     }
 

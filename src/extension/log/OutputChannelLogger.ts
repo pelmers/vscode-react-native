@@ -5,12 +5,15 @@
  * Formatter for the Output channel.
  */
 
+// BEGIN MODIFIED BY PELMERS
 import {OutputChannel} from "vscode";
+// END MODIFIED BY PELMERS
 import { ILogger, LogLevel, LogHelper } from "./LogHelper";
 import { logger } from "vscode-chrome-debug-core";
 
 const channels: { [channelName: string]: OutputChannelLogger } = {};
 
+// BEGIN MODIFIED BY PELMERS
 const ConsoleChannel: OutputChannel = {
     name: "console",
     append(value: string): void {
@@ -28,6 +31,7 @@ const ConsoleChannel: OutputChannel = {
     dispose(): void {
     },
 };
+// END MODIFIED BY PELMERS
 
 export class OutputChannelLogger implements ILogger {
     public static MAIN_CHANNEL_NAME: string = "React Native";
@@ -54,7 +58,9 @@ export class OutputChannelLogger implements ILogger {
 
     constructor(public readonly channelName: string, lazy: boolean = false, private preserveFocus: boolean = false) {
         if (!lazy) {
+            // BEGIN MODIFIED BY PELMERS
             this.channel = ConsoleChannel;
+            // END MODIFIED BY PELMERS
             this.channel.show(this.preserveFocus);
         }
     }
@@ -115,7 +121,9 @@ export class OutputChannelLogger implements ILogger {
         if (this.outputChannel) {
             return this.outputChannel;
         } else {
+            // BEGIN MODIFIED BY PELMERS
             this.outputChannel = ConsoleChannel;
+            // END MODIFIED BY PELMERS
             this.outputChannel.show(this.preserveFocus);
             return this.outputChannel;
         }
