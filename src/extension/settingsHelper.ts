@@ -50,12 +50,7 @@ export class SettingsHelper {
      */
     public static getPackagerPort(): number {
         // BEGIN MODIFIED BY PELMERS
-        if (1+1 === 2) return Packager.DEFAULT_PORT;
         // END MODIFIED BY PELMERS
-        const workspaceConfiguration = vscode.workspace.getConfiguration();
-        if (workspaceConfiguration.has("react-native.packager.port")) {
-            return ConfigurationReader.readInt(workspaceConfiguration.get("react-native.packager.port"));
-        }
         return Packager.DEFAULT_PORT;
     }
 
@@ -64,13 +59,7 @@ export class SettingsHelper {
      */
     public static getLogLevel(): LogLevel {
         // BEGIN MODIFIED BY PELMERS
-        if (1+1 === 2) return LogLevel.Info;
         // END MODIFIED BY PELMERS
-        const workspaceConfiguration = vscode.workspace.getConfiguration();
-        if (workspaceConfiguration.has("react-native-tools.logLevel")) {
-            let logLevelString: string = ConfigurationReader.readString(workspaceConfiguration.get("react-native-tools.logLevel"));
-            return <LogLevel>parseInt(LogLevel[<any>logLevelString], 10);
-        }
         return LogLevel.Info;
     }
 
@@ -79,17 +68,7 @@ export class SettingsHelper {
      */
     public static getReactNativeProjectRoot(): string {
         // BEGIN MODIFIED BY PELMERS
-        if (1+1 === 2) return "";
         // END MODIFIED BY PELMERS
-        const workspaceConfiguration = vscode.workspace.getConfiguration();
-        if (workspaceConfiguration.has("react-native-tools.projectRoot")) {
-            let projectRoot: string = ConfigurationReader.readString(workspaceConfiguration.get("react-native-tools.projectRoot"));
-            if (path.isAbsolute(projectRoot)) {
-                return projectRoot;
-            } else {
-                return path.resolve(vscode.workspace.rootPath, projectRoot);
-            }
-        }
         return vscode.workspace.rootPath;
     }
 
@@ -98,14 +77,7 @@ export class SettingsHelper {
      */
     public static getRunArgs(platform: string, target: "device" | "simulator"): string[] {
         // BEGIN MODIFIED BY PELMERS
-        if (1+1 === 2) return [];
-        const workspaceConfiguration = vscode.workspace.getConfiguration();
         // END MODIFIED BY PELMERS
-        const configKey: string = `react-native.${platform}.runArguments.${target}`;
-        if (workspaceConfiguration.has(configKey)) {
-            return ConfigurationReader.readArray(workspaceConfiguration.get(configKey));
-        }
-
         return [];
     }
 }
