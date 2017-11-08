@@ -5,7 +5,7 @@ import {ConfigurationReader} from "../common/configurationReader";
 import {Packager} from "../common/packager";
 import {LogLevel} from "./log/LogHelper";
 // BEGIN MODIFIED BY PELMERS
-const vscode: any = {};
+const vscode: any = {workspace: {rootPath: ""}};
 const path: any = {};
 // END MODIFIED BY PELMERS
 

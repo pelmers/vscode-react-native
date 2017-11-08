@@ -3,11 +3,11 @@
 
 import {Telemetry} from "./telemetry";
 import {MobilePlatformDeps} from "../extension/generalMobilePlatform";
+// BEGIN MODIFIED BY PELMERS
 import {PlatformResolver} from "../extension/platformResolver";
 import {TargetPlatformHelper} from "./targetPlatformHelper";
 import {SettingsHelper} from "../extension/settingsHelper";
 import {Packager} from "./packager";
-// BEGIN MODIFIED BY PELMERS
 import Q = require("q");
 
 export interface ICommonApi {
