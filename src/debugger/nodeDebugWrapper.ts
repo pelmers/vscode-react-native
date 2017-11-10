@@ -131,7 +131,9 @@ export function makeSession(
             }
 
             this.projectRootPath = getProjectRoot(args);
-            this.remoteExtension = RemoteExtension.atProjectRootPath(this.projectRootPath);
+            // BEGIN MODIFIED BY PELMERS
+            this.remoteExtension = RemoteExtension.atProjectRootPath(this.projectRootPath, args.port);
+            // END MODIFIED BY PELMERS
 
             // Start to send telemetry
             telemetryReporter.reassignTo(new ExtensionTelemetryReporter(

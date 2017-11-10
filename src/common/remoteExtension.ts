@@ -37,15 +37,15 @@ export interface IRemoteExtension {
 }
 
 export class RemoteExtension {
-    public static atProjectRootPath(projectRootPath: string) {
-        const packager = new Packager(projectRootPath, projectRootPath, SettingsHelper.getPackagerPort());
+    public static atProjectRootPath(projectRootPath: string, port: number) {
+        const packager = new Packager(projectRootPath, projectRootPath, port);
         return new RemoteExtension(projectRootPath, packager);
     }
 
     constructor(private projectRootPath: string, private reactNativePackager: Packager) {}
 
     public getPackagerPort(): Q.Promise<number> {
-        return Q(SettingsHelper.getPackagerPort());
+        return Q(this.reactNativePackager.port);
     }
 
     public showDevMenu(deviceId?: string): Q.Promise<any> {
@@ -89,7 +89,7 @@ export class RemoteExtension {
             mobilePlatformOptions.scheme = request.arguments.scheme;
     }
 
-        mobilePlatformOptions.packagerPort = SettingsHelper.getPackagerPort();
+        mobilePlatformOptions.packagerPort = this.reactNativePackager.port
         const platformDeps: MobilePlatformDeps = {
             packager: this.reactNativePackager,
         };
