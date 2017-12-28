@@ -20,7 +20,9 @@ export class FileSystem {
             throw new Error(`Expected ${dir} to be a directory`);
         }, (err: Error & { code?: string }): Q.Promise<any> => {
             if (err && err.code === "ENOENT") {
-                return Q.nfcall(this.fs.mkdir, dir);
+                // BEGIN MODIFIED BY PELMERS
+                return this.ensureDirectory(path.dirname(dir)).then(() => Q.nfcall(this.fs.mkdir, dir));
+                // END MODIFIED BY PELMERS
             }
             throw err;
         });
